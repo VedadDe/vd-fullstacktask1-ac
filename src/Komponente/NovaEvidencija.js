@@ -104,7 +104,7 @@ export default function NovaEvidencija({korisnici, programi}) {
                 Naplati- evidentiraj
             </Button>
             <br/>
-            <Typography>Cijena pranja je: {cijena}</Typography>
+            <Typography variant="h9" sx={{color: "red"}}>Cijena pranja je: {cijena}</Typography>
 
             <Stack spacing={2} sx={{width: "100%"}}>
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
