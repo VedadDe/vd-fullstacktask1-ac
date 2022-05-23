@@ -1,31 +1,27 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {db} from "../Baza/firebase_config";
 import {
+    Alert,
     Box,
     Button,
-    FormControl, InputLabel, MenuItem,
+    FormControl,
+    InputLabel,
+    MenuItem,
     Select,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    TextField
+    Snackbar,
+    Stack,
+    TextField,
+    Typography,
 } from "@mui/material";
 import Korisnici from "./Korisnici";
 
-
-export default function NoviKorisnik({marke, tipovi}){
-
+export default function NoviKorisnik({marke, tipovi}) {
     const [imeNovo, setImeNovo] = useState();
-    const [markaNovo, setMarkaNovo] = useState();
     const [registracijaNovo, setRegistracijaNovo] = useState();
-    const [tipNovo, setTipNovo] = useState();
+    const [open, setOpen] = React.useState(false);
 
-
-
-    const [noveMarke, setNoveMarke] = useState('');
-    const [noviTipovi, setNoviTipovi] = useState('')
+    const [noveMarke, setNoveMarke] = useState("");
+    const [noviTipovi, setNoviTipovi] = useState("");
 
     const handleChange = (event) => {
         setNoveMarke(event.target.value);
@@ -34,75 +30,91 @@ export default function NoviKorisnik({marke, tipovi}){
         setNoviTipovi(event.target.value);
     };
 
-
-
-    function dodajKorisnika(e){
-        e.preventDefault()
+    function dodajKorisnika(e) {
+        e.preventDefault();
         db.collection("Korisnici").add({
             ime: imeNovo,
             marka: noveMarke,
             posjeta: 0,
             registracija: registracijaNovo,
-            tip: noviTipovi
-
-        })
-
+            tip: noviTipovi,
+        });
+        setOpen(true);
     }
-    return(
+
+    const handleClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+
+        setOpen(false);
+    };
+    return (
         <Box>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+            <br/>
+            <br/>
+            <Typography variant={"h5"} sx={{color: "green"}}>
+                Forma za kreiranje novog korisnika:{" "}
+            </Typography>
+
+            <FormControl variant="standard" sx={{m: 1, minWidth: 120}}>
                 <InputLabel id="demo-simple-select-label">Marke</InputLabel>
                 <Select
-
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={noveMarke}
                     label="Marke"
                     onChange={handleChange}
                 >
-                    {
-                        marke.map((marke)=>(
-                            <MenuItem value={marke.naziv}>{marke.naziv}</MenuItem>
-                        ))}
-
+                    {marke.map((marke) => (
+                        <MenuItem value={marke.naziv}>{marke.naziv}</MenuItem>
+                    ))}
                 </Select>
             </FormControl>
 
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+            <FormControl variant="standard" sx={{m: 1, minWidth: 120}}>
                 <InputLabel id="demo-simple-select-label">Tipovi</InputLabel>
-            <Select
-
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={noviTipovi}
-                label="Tipovi"
-                onChange={handleChangeTip}
-            >
-                {
-                    tipovi.map((tipovi)=>(
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={noviTipovi}
+                    label="Tipovi"
+                    onChange={handleChangeTip}
+                >
+                    {tipovi.map((tipovi) => (
                         <MenuItem value={tipovi.naziv}>{tipovi.naziv}</MenuItem>
                     ))}
-
-            </Select>
+                </Select>
             </FormControl>
 
+            <TextField
+                placeholder={"ime"}
+                onChange={(e) => {
+                    setImeNovo(e.target.value);
+                }}
+            />
+            <TextField
+                placeholder={"registracija"}
+                onChange={(e) => {
+                    setRegistracijaNovo(e.target.value);
+                }}
+            />
 
-            <TextField placeholder={"ime"} onChange={(e) =>
-            {setImeNovo(e.target.value)
-                // eslint-disable-next-line no-template-curly-in-string
-                console.log(`ovo ste upisali: ${e.target.value}`)}}/>
-            <TextField placeholder={"registracija"} onChange={(e) =>
-            {setRegistracijaNovo(e.target.value)
-                // eslint-disable-next-line no-template-curly-in-string
-                console.log(`ovo ste upisali: ${e.target.value}`)}}/>
+            <Button color="primary" onClick={dodajKorisnika}>
+                Dodaj korisnika
+            </Button>
 
-            <Button color="primary" onClick={dodajKorisnika}>Dodaj korisnika</Button>
-
-
-
+            <Stack spacing={2} sx={{width: "100%"}}>
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert
+                        onClose={handleClose}
+                        severity="success"
+                        sx={{width: "100%"}}
+                    >
+                        Korisnik dodan!
+                    </Alert>
+                </Snackbar>
+            </Stack>
         </Box>
-    )
-
-
-
+    );
 }

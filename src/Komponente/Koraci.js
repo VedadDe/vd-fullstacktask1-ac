@@ -1,23 +1,21 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 
-import {Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
+import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 
-
-export default function Koraci({ime}){
-
-    return(
-<TableBody>
-                <TableRow>
-
-
-                <TableCell align="left" style={{width:'10%'}}>{ime}</TableCell>
-                </TableRow>
-
-            </TableBody>
-
-
-    )
-
-
-
+export default function Koraci({koraci}) {
+    return (
+        <FormControl variant="standard" sx={{m: 3, width: "90%"}}>
+            <InputLabel id="demo-simple-select-label">Koraci</InputLabel>
+            <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={koraci.naziv}
+                label="Koraci"
+            >
+                {koraci.map((koraci) => (
+                    <MenuItem value={koraci.naziv}>{koraci.naziv}</MenuItem>
+                ))}
+            </Select>
+        </FormControl>
+    );
 }
